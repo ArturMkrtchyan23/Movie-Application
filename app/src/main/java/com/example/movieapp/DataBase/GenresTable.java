@@ -10,13 +10,13 @@ import androidx.room.PrimaryKey;
 public class GenresTable {
 
     @PrimaryKey()
-    private int genre_ids;
+    private int genre_id;
     @ColumnInfo(name = "name")
     private String name;
 
 
-    public GenresTable(int genre_ids, String name) {
-        this.genre_ids = genre_ids;
+    public GenresTable(int genre_id, String name) {
+        this.genre_id = genre_id;
         this.name = name;
     }
 
@@ -26,12 +26,12 @@ public class GenresTable {
     }
 
 
-    public int getGenre_ids() {
-        return genre_ids;
+    public int getGenre_id() {
+        return genre_id;
     }
 
-    public void setGenre_ids(int genre_ids) {
-        this.genre_ids = genre_ids;
+    public void setGenre_id(int genre_id) {
+        this.genre_id = genre_id;
     }
 
     public String getName() {

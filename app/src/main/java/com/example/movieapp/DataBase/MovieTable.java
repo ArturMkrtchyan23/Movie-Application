@@ -18,7 +18,6 @@ public class MovieTable {
     private String original_title;
     @ColumnInfo(name = "backdrop_path")
     private String backdrop_path;
-
     @ColumnInfo(name = "genre_ids")
     private int[] genre_ids;
 

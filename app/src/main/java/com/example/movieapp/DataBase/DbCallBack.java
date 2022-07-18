@@ -1,8 +1,9 @@
 package com.example.movieapp.DataBase;
 
-import java.util.List;
+import com.example.movieapp.MovieShowPage;
+
 
 public interface DbCallBack {
-    void onComplete(List<GenresTable> personList);
+    void onComplete(MovieShowPage movieShowPage);
 
 }

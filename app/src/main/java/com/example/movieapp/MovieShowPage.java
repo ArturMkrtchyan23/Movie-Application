@@ -35,6 +35,9 @@ public class MovieShowPage implements Parcelable{
         vote_count = in.readInt();
         id = in.readInt();
     }
+    public MovieShowPage(){
+
+    }
 
     public static final Creator<MovieShowPage> CREATOR = new Creator<MovieShowPage>() {
         @Override
