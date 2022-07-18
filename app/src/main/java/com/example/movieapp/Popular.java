@@ -37,6 +37,10 @@ public class Popular  implements Parcelable {
         }
     };
 
+    public Popular(){
+
+    }
+
     public String getOriginal_title() {
         return original_title;
     }
