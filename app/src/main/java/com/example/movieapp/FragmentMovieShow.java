@@ -49,6 +49,7 @@ public class FragmentMovieShow extends Fragment {
 
         Bundle bundle = getArguments();
         Popular popular = bundle.getParcelable("popular");
+        System.out.println("-=-=-=-=-=" + popular);
 
         resultes = new ArrayList<>();
 
