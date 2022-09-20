@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.0.1'
     implementation 'com.squareup.okhttp3:okhttp:4.7.2'
 
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
 
 
     implementation "android.arch.persistence.room:runtime:1.0.0"

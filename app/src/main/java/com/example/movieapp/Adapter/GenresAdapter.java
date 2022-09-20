@@ -59,6 +59,7 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
 
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("popular", popular);
+                System.out.println("-=...-=-=-" + bundle);
                 fragmentMovieShow.setArguments(bundle);
 
                 ((AppCompatActivity)context).getSupportFragmentManager()

@@ -1,5 +1,8 @@
 package com.example.movieapp;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import com.example.movieapp.DataBase.GenresTable;
 import com.example.movieapp.DataBase.MovieDatabase;
 import com.example.movieapp.DataBase.MovieTable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,9 +39,14 @@ public class FragmentMovie extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_movie, container, false);
 
-
-        getMovie();
-        getPopular();
+        if (isConnected()){
+            System.out.println("-=-==-=-" + isConnected());
+            getMovie();
+            getPopular();
+        }else {
+            getGeneresFromDB();
+            getResultsFromDB();
+        }
 
         return view;
     }
@@ -113,6 +122,68 @@ public class FragmentMovie extends Fragment {
         });
     }
 
+    private void getGeneresFromDB() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                generes = new ArrayList<>();
+                MovieDatabase movieDatabase = MovieDatabase.getInstance(getContext());
+                List<GenresTable> genresList = movieDatabase.genresDao().getGenresList();
+                    for (int i = 0; i < genresList.size(); i++){
+                        Movie movie = new Movie();
+                        movie.setName(genresList.get(i).getName());
+                        movie.setId(genresList.get(i).getGenre_id());
+                        System.out.println("-=-=-=-=" + movie.getName());
+                        generes.add(movie);
+                    }
+            }
+        });
+    }
+
+    private void getResultsFromDB(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Popular> results = new ArrayList<>();
+                MovieDatabase movieDatabase = MovieDatabase.getInstance(getContext());
+                List<MovieTable> movieList = movieDatabase.movieDao().getMovieList();
+                for (int i = 0; i < movieList.size(); i++){
+                    Popular popular = new Popular();
+                    popular.setBackdrop_path(movieList.get(i).getBackdrop_path());
+                    popular.setId(movieList.get(i).getId());
+                    popular.setOriginal_title(movieList.get(i).getOriginal_title());
+                    popular.setGenre_ids(movieList.get(i).getGenre_ids());
+                    System.out.println("-==00-0==" + popular.getGenre_ids());
+                    results.add(popular);
+
+                }
+                for (Movie gener : generes) {
+                    int id = gener.getId();
+                    for (Popular popular : results) {
+                        for (int i =0; i < popular.getGenre_ids().length; i++) {
+                            if (popular.getGenre_ids()[i] == id) {
+                                gener.setPopulars(popular);
+                                break;
+                            }
+                        }
+                    }
+                }
+                RecyclerView recyclerViewGenres = getView().findViewById(R.id.recyclerViewGenres);
+
+                recyclerViewGenres.setHasFixedSize(true);
+
+                adapterGenres = new GenresAdapter(getContext(), generes);
+                recyclerViewGenres.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));
+                recyclerViewGenres.setAdapter(adapterGenres);
+
+            }
+        });
+
+    }
+
+
+
+
     private void getGenresTable(List<Movie> genres){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -121,7 +192,7 @@ public class FragmentMovie extends Fragment {
                 for (int i = 0; i < genres.size(); i++){
                     GenresTable genresTable = new GenresTable();
                     genresTable.setName(genres.get(i).getName());
-                    genresTable.setGenre_ids(genres.get(i).getId());
+                    genresTable.setGenre_id(genres.get(i).getId());
 
                     movieDatabase.genresDao().insertGenres(genresTable);
                 }
@@ -156,5 +227,19 @@ public class FragmentMovie extends Fragment {
 
                 }
             });
+    }
+
+    boolean isConnected(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if (wifiConn != null && wifiConn.isConnected() || (mobileConn != null && mobileConn.isConnected())){
+            return true;
+        }else {
+            return false;
+        }
+
     }
 }
